@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>English Grammar Test</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #222;
+        margin: 0;
+        padding: 20px;
+        transition: 0.3s;
+    }
+
+    .dark-mode {
+        background: #1e1e1e;
+        color: #f5f5f5;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: auto;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .controls {
+        text-align: center;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .question {
+        padding: 15px;
+        background: #fff;
+        margin: 12px 0;
+        border-radius: 6px;
+        transition: transform 0.2s, border-left 0.3s;
+        border-left: 5px solid transparent;
+    }
+
+    .dark-mode .question {
+        background: #333;
+    }
+
+    .question:hover {
+        transform: translateX(5px);
+    }
+
+    .selected-answer {
+        background-color: #e6f2ff !important;
+    }
+    
+    .dark-mode .selected-answer {
+        background-color: #2a3d4f !important;
+    }
+
+    .correct {
+        border-left: 5px solid #4CAF50 !important;
+    }
+
+    .incorrect {
+        border-left: 5px solid #f44336 !important;
+    }
+
+    button {
+        padding: 12px 25px;
+        font-size: 18px;
+        cursor: pointer;
+        margin-top: 20px;
+        border: none;
+        border-radius: 6px;
+        background: #0078ff;
+        color: white;
+    }
+
+    .result-page {
+        display: none;
+        text-align: center;
+        margin-top: 40px;
+    }
+
+    .result-score {
+        font-size: 40px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    /* شريط التقدم */
+    .progress-container {
+        width: 100%;
+        height: 20px;
+        background-color: #ddd;
+        border-radius: 10px;
+        margin: 20px 0;
+        overflow: hidden;
+    }
+    
+    .dark-mode .progress-container {
+        background-color: #444;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        background-color: #0078ff;
+        width: 0%;
+        transition: width 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    /* المؤقت */
+    #timer {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        margin: 20px 0;
+        padding: 10px;
+        background: #0078ff;
+        color: white;
+        border-radius: 6px;
+    }
+
+    /* الرسم البياني في النتائج */
+    .chart-container {
+        margin: 30px 0;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+    }
+    
+    .dark-mode .chart-container {
+        background: #333;
+    }
+    
+    .chart {
+        display: flex;
+        height: 40px;
+        border-radius: 8px;
+        overflow: hidden;
+        margin: 10px 0;
+    }
+    
+    .chart-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        transition: width 0.5s;
+    }
+    
+    .correct-bar {
+        background-color: #4CAF50;
+    }
+    
+    .incorrect-bar {
+        background-color: #f44336;
+    }
+
+    /* عناصر النتائج */
+    .result-item {
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 6px;
+        background: #fff;
+        text-align: left;
+    }
+    
+    .dark-mode .result-item {
+        background: #333;
+    }
+    
+    .correct-answer {
+        color: #4CAF50;
+        font-weight: bold;
+    }
+    
+    .user-answer {
+        color: #2196F3;
+    }
+    
+    .score-number {
+        color: #0078ff;
+        font-size: 60px;
+    }
+    
+    .percentage {
+        font-size: 24px;
+        color: #666;
+        margin-top: 10px;
+    }
+    
+    .dark-mode .percentage {
+        color: #ccc;
+    }
+
+    /* أزرار إضافية */
+    .button-container {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    
+    .button-container button {
+        flex: 1;
+    }
+    
+    #resetBtn {
+        background: #ff9800;
+    }
+    
+    #printBtn {
+        background: #4CAF50;
+    }
+
+    /* زر اختيار اللغة */
+    .language-switcher {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .lang-btn {
+        padding: 8px 16px;
+        border: 2px solid #0078ff;
+        background: white;
+        color: #0078ff;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+    
+    .lang-btn.active {
+        background: #0078ff;
+        color: white;
+    }
+    
+    .dark-mode .lang-btn {
+        background: #333;
+        color: #f5f5f5;
+        border-color: #f5f5f5;
+    }
+    
+    .dark-mode .lang-btn.active {
+        background: #0078ff;
+        color: white;
+        border-color: #0078ff;
+    }
+
+    /* تصميم متجاوب للجوال */
+    @media (max-width: 600px) {
+        .question {
+            padding: 10px;
+            font-size: 14px;
+        }
+        
+        button {
+            padding: 15px;
+            font-size: 16px;
+        }
+        
+        .result-item {
+            padding: 8px;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .result-score {
+            font-size: 30px;
+        }
+        
+        .button-container {
+            flex-direction: column;
+        }
+        
+        .controls {
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+    }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1 id="mainTitle">English Grammar Test (50 Questions)</h1>
+
+    <div class="controls">
+        <div class="language-switcher">
+            <span id="languageLabel">Language:</span>
+            <button class="lang-btn active" id="langEN">EN</button>
+            <button class="lang-btn" id="langAR">AR</button>
+        </div>
+        
+        <div class="toggle">
+            <label>
+                <input type="checkbox" id="darkToggle"> <span id="darkModeLabel">Dark Mode</span>
+            </label>
+        </div>
+    </div>
+
+    <!-- المؤقت -->
+    <div id="timer" data-en="Time Remaining: " data-ar="الوقت المتبقي: "></div>
+
+    <!-- شريط التقدم -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar">0%</div>
+    </div>
+
+    <!-- النموذج -->
+    <form id="quizForm"></form>
+
+    <!-- أزرار التحكم -->
+    <div class="button-container">
+        <button onclick="submitQuiz()" id="submitBtn">Submit Test</button>
+        <button id="resetBtn" onclick="resetQuiz()" data-en="Reset Test" data-ar="إعادة الاختبار">Reset Test</button>
+    </div>
+
+    <!-- صفحة النتائج -->
+    <div class="result-page" id="resultPage">
+        <div class="result-score" id="scoreText"></div>
+        <h2 id="resultsTitle" data-en="Test Results" data-ar="نتائج الاختبار">Test Results</h2>
+        <div id="chartContainer"></div>
+        <h3 id="detailsTitle" data-en="Detailed Answers" data-ar="الإجابات التفصيلية">Detailed Answers</h3>
+        <div id="answersList"></div>
+        <div class="button-container">
+            <button id="printBtn" onclick="printResults()" data-en="Print Results" data-ar="طباعة النتائج">Print Results</button>
+            <button onclick="resetQuiz()" id="retakeBtn" data-en="Take Test Again" data-ar="إعادة الاختبار">Take Test Again</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// الأسئلة
+const questions = [
+    // -------------------------
+    // 1. Verb to Be (am/is/are) - 10
+    // -------------------------
+    {q:"I ___ a student.", a:"am", o:["is","am","are"], level:"beginner", category:"verb-to-be"},
+    {q:"She ___ happy today.", a:"is", o:["is","are","am"], level:"beginner", category:"verb-to-be"},
+    {q:"They ___ from Canada.", a:"are", o:["is","are","am"], level:"beginner", category:"verb-to-be"},
+    {q:"He ___ my brother.", a:"is", o:["is","am","are"], level:"beginner", category:"verb-to-be"},
+    {q:"We ___ ready.", a:"are", o:["am","is","are"], level:"beginner", category:"verb-to-be"},
+    {q:"You ___ very kind.", a:"are", o:["is","am","are"], level:"beginner", category:"verb-to-be"},
+    {q:"The cat ___ hungry.", a:"is", o:["is","are","am"], level:"beginner", category:"verb-to-be"},
+    {q:"I ___ not tired.", a:"am", o:["are","is","am"], level:"beginner", category:"verb-to-be"},
+    {q:"They ___ in the park.", a:"are", o:["am","is","are"], level:"beginner", category:"verb-to-be"},
+    {q:"She ___ not here.", a:"is", o:["is","are","am"], level:"beginner", category:"verb-to-be"},
+
+    // -------------------------
+    // 2. Present Simple - 10
+    // -------------------------
+    {q:"I ___ coffee every morning.", a:"drink", o:["drink","drinks","drinking"], level:"beginner", category:"present-simple"},
+    {q:"She ___ to school by bus.", a:"goes", o:["goes","go","going"], level:"beginner", category:"present-simple"},
+    {q:"They ___ football on Fridays.", a:"play", o:["plays","play","playing"], level:"beginner", category:"present-simple"},
+    {q:"He ___ TV at night.", a:"watches", o:["watch","watches","watching"], level:"beginner", category:"present-simple"},
+    {q:"We ___ English every day.", a:"study", o:["studies","study","studying"], level:"beginner", category:"present-simple"},
+    {q:"The sun ___ in the east.", a:"rises", o:["rise","rises","rising"], level:"intermediate", category:"present-simple"},
+    {q:"You ___ very fast.", a:"run", o:["runs","run","running"], level:"beginner", category:"present-simple"},
+    {q:"My father ___ early.", a:"works", o:["work","works","working"], level:"beginner", category:"present-simple"},
+    {q:"The dog ___ loudly.", a:"barks", o:["bark","barks","barking"], level:"beginner", category:"present-simple"},
+    {q:"I ___ pizza.", a:"like", o:["likes","like","liking"], level:"beginner", category:"present-simple"},
+
+    // -------------------------
+    // 3. Can / Can't - 10
+    // -------------------------
+    {q:"I ___ swim.", a:"can", o:["can","can't","cannot"], level:"beginner", category:"can-cant"},
+    {q:"She ___ drive a car.", a:"can't", o:["can","can't","could"], level:"beginner", category:"can-cant"},
+    {q:"They ___ speak French.", a:"can", o:["can","can't","may"], level:"beginner", category:"can-cant"},
+    {q:"He ___ play the guitar.", a:"can", o:["can","can't","will"], level:"beginner", category:"can-cant"},
+    {q:"We ___ come today.", a:"can't", o:["can","can't","could"], level:"beginner", category:"can-cant"},
+    {q:"You ___ lift this box.", a:"can", o:["can","can't","won't"], level:"beginner", category:"can-cant"},
+    {q:"The baby ___ walk.", a:"can't", o:["can","can't","will"], level:"beginner", category:"can-cant"},
+    {q:"Birds ___ fly.", a:"can", o:["can","can't","should"], level:"beginner", category:"can-cant"},
+    {q:"I ___ see without glasses.", a:"can't", o:["can","can't","might"], level:"beginner", category:"can-cant"},
+    {q:"She ___ cook very well.", a:"can", o:["can","can't","must"], level:"beginner", category:"can-cant"},
+
+    // -------------------------
+    // 4. There is / There are - 10
+    // -------------------------
+    {q:"___ a cat on the roof.", a:"There is", o:["There is","There are","It is"], level:"beginner", category:"there-is-are"},
+    {q:"___ two cars outside.", a:"There are", o:["There is","There are","They are"], level:"beginner", category:"there-is-are"},
+    {q:"___ a problem here.", a:"There is", o:["There is","There are","There"], level:"beginner", category:"there-is-are"},
+    {q:"___ many students today.", a:"There are", o:["There is","There are","There be"], level:"beginner", category:"there-is-are"},
+    {q:"___ a dog in the park.", a:"There is", o:["There is","There are","They are"], level:"beginner", category:"there-is-are"},
+    {q:"___ three books on the table.", a:"There are", o:["There is","There are","It is"], level:"beginner", category:"there-is-are"},
+    {q:"___ a letter for you.", a:"There is", o:["There is","There are","It are"], level:"beginner", category:"there-is-are"},
+    {q:"___ some apples in the fridge.", a:"There are", o:["There is","There are","There"], level:"beginner", category:"there-is-are"},
+    {q:"___ a new student in class.", a:"There is", o:["There is","There are","They are"], level:"beginner", category:"there-is-are"},
+    {q:"___ many problems today.", a:"There are", o:["There is","There are","There"], level:"beginner", category:"there-is-are"},
+
+    // -------------------------
+    // 5. Past Simple of "be" - 10
+    // -------------------------
+    {q:"I ___ tired yesterday.", a:"was", o:["was","were","am"], level:"beginner", category:"past-simple"},
+    {q:"They ___ at home last night.", a:"were", o:["was","were","are"], level:"beginner", category:"past-simple"},
+    {q:"She ___ sick last week.", a:"was", o:["was","were","is"], level:"beginner", category:"past-simple"},
+    {q:"We ___ happy to see you.", a:"were", o:["was","were","are"], level:"beginner", category:"past-simple"},
+    {q:"He ___ my teacher.", a:"was", o:["was","were","is"], level:"beginner", category:"past-simple"},
+    {q:"You ___ late yesterday.", a:"were", o:["were","was","are"], level:"beginner", category:"past-simple"},
+    {q:"The movie ___ boring.", a:"was", o:["was","were","is"], level:"beginner", category:"past-simple"},
+    {q:"They ___ not ready.", a:"were", o:["was","were","are"], level:"beginner", category:"past-simple"},
+    {q:"I ___ at school on Monday.", a:"was", o:["was","were","am"], level:"beginner", category:"past-simple"},
+    {q:"We ___ friends.", a:"were", o:["was","were","are"], level:"beginner", category:"past-simple"},
+];
+
+// متغيرات المؤقت
+let timer = 1800; // 30 دقيقة بالثواني
+let timerInterval;
+let currentLanguage = 'en'; // اللغة الحالية
+
+// النصوص للغات المختلفة
+const translations = {
+    en: {
+        title: "English Grammar Test (50 Questions)",
+        languageLabel: "Language:",
+        darkModeLabel: "Dark Mode",
+        timeLabel: "Time Remaining: ",
+        submitBtn: "Submit Test",
+        resetBtn: "Reset Test",
+        resultsTitle: "Test Results",
+        detailsTitle: "Detailed Answers",
+        printBtn: "Print Results",
+        retakeBtn: "Take Test Again",
+        correct: "Correct",
+        yourAnswer: "Your answer",
+        category: "Category",
+        level: "Level",
+        overallPerformance: "Overall Performance",
+        performanceByCategory: "Performance by Category",
+        timeUp: "Time's up! The test will be corrected automatically."
+    },
+    ar: {
+        title: "اختبار قواعد اللغة الإنجليزية (50 سؤال)",
+        languageLabel: "اللغة:",
+        darkModeLabel: "الوضع الداكن",
+        timeLabel: "الوقت المتبقي: ",
+        submitBtn: "تقديم الاختبار",
+        resetBtn: "إعادة الاختبار",
+        resultsTitle: "نتائج الاختبار",
+        detailsTitle: "الإجابات التفصيلية",
+        printBtn: "طباعة النتائج",
+        retakeBtn: "إعادة الاختبار",
+        correct: "الإجابة الصحيحة",
+        yourAnswer: "إجابتك",
+        category: "الفئة",
+        level: "المستوى",
+        overallPerformance: "الأداء العام",
+        performanceByCategory: "الأداء حسب الفئة",
+        timeUp: "انتهى الوقت! سيتم تصحيح الاختبار تلقائياً."
+    }
+};
+
+// تهيئة التطبيق
+document.addEventListener('DOMContentLoaded', function() {
+    renderQuestions();
+    startTimer();
+    setupEventListeners();
+    loadProgress();
+    
+    // تعيين اللغة الافتراضية
+    setLanguage('en');
+});
+
+// عرض الأسئلة
+function renderQuestions() {
+    const quizForm = document.getElementById("quizForm");
+    
+    questions.forEach((item, index) => {
+        let html = `
+            <div class="question" id="q${index}">
+                <strong>${index + 1}. ${item.q}</strong><br>
+                ${item.o.map(opt => `
+                    <label>
+                        <input type="radio" name="q${index}" value="${opt}"> ${opt}
+                    </label><br>
+                `).join("")}
+            </div>
+        `;
+        quizForm.innerHTML += html;
+    });
+}
+
+// بدء المؤقت
+function startTimer() {
+    clearInterval(timerInterval);
+    
+    timerInterval = setInterval(() => {
+        const minutes = Math.floor(timer / 60);
+        const seconds = timer % 60;
+        
+        const timeLabel = currentLanguage === 'en' ? 
+            `Time Remaining: ${minutes}:${seconds.toString().padStart(2, '0')}` :
+            `الوقت المتبقي: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+        document.getElementById('timer').textContent = timeLabel;
+        
+        if (timer <= 0) {
+            clearInterval(timerInterval);
+            submitQuiz();
+            alert(currentLanguage === 'en' ? 
+                "Time's up! The test will be corrected automatically." : 
+                "انتهى الوقت! سيتم تصحيح الاختبار تلقائياً.");
+        }
+        timer--;
+    }, 1000);
+}
+
+// إعداد المستمعين للأحداث
+function setupEventListeners() {
+    // Dark Mode
+    document.getElementById("darkToggle").addEventListener("change", function() {
+        document.body.classList.toggle("dark-mode");
+    });
+    
+    // التصحيح الفوري عند اختيار إجابة
+    document.querySelectorAll('input[type="radio"]').forEach(input => {
+        input.addEventListener('change', function() {
+            const questionIndex = this.name.substring(1);
+            checkAnswerImmediately(questionIndex);
+            saveProgress();
+            updateProgress();
+        });
+    });
+    
+    // أزرار تغيير اللغة
+    document.getElementById('langEN').addEventListener('click', function() {
+        setLanguage('en');
+    });
+    
+    document.getElementById('langAR').addEventListener('click', function() {
+        setLanguage('ar');
+    });
+}
+
+// تعيين اللغة
+function setLanguage(lang) {
+    currentLanguage = lang;
+    
+    // تحديث أزرار اللغة
+    document.getElementById('langEN').classList.toggle('active', lang === 'en');
+    document.getElementById('langAR').classList.toggle('active', lang === 'ar');
+    
+    // تحديث النصوص
+    const t = translations[lang];
+    
+    document.getElementById('mainTitle').textContent = t.title;
+    document.getElementById('languageLabel').textContent = t.languageLabel;
+    document.getElementById('darkModeLabel').textContent = t.darkModeLabel;
+    document.getElementById('submitBtn').textContent = t.submitBtn;
+    document.getElementById('resetBtn').textContent = t.resetBtn;
+    document.getElementById('resultsTitle').textContent = t.resultsTitle;
+    document.getElementById('detailsTitle').textContent = t.detailsTitle;
+    document.getElementById('printBtn').textContent = t.printBtn;
+    document.getElementById('retakeBtn').textContent = t.retakeBtn;
+    
+    // تحديث المؤقت
+    const minutes = Math.floor(timer / 60);
+    const seconds = timer % 60;
+    document.getElementById('timer').textContent = 
+        lang === 'en' ? 
+        `Time Remaining: ${minutes}:${seconds.toString().padStart(2, '0')}` :
+        `الوقت المتبقي: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+    
+    // تحديث اتجاه الصفحة للغة العربية
+    if (lang === 'ar') {
+        document.body.style.direction = 'rtl';
+        document.querySelector('.container').style.textAlign = 'right';
+    } else {
+        document.body.style.direction = 'ltr';
+        document.querySelector('.container').style.textAlign = 'left';
+    }
+}
+
+// تصحيح السؤال فور الإجابة
+function checkAnswerImmediately(questionIndex) {
+    const selected = document.querySelector(`input[name="q${questionIndex}"]:checked`);
+    if (!selected) return;
+    
+    const questionDiv = document.getElementById(`q${questionIndex}`);
+    questionDiv.classList.remove('correct', 'incorrect', 'selected-answer');
+    
+    // إضافة تأثير التحديد
+    questionDiv.classList.add('selected-answer');
+    
+    // تصحيح فوري إذا كان في وضع المراجعة
+    if (document.getElementById('resultPage').style.display === 'block') {
+        if (selected.value === questions[questionIndex].a) {
+            questionDiv.classList.add('correct');
+        } else {
+            questionDiv.classList.add('incorrect');
+        }
+    }
+}
+
+// تحديث شريط التقدم
+function updateProgress() {
+    const answered = questions.filter((q, i) => 
+        document.querySelector(`input[name="q${i}"]:checked`)
+    ).length;
+    const progress = (answered / questions.length) * 100;
+    const progressBar = document.getElementById('progressBar');
+    progressBar.style.width = `${progress}%`;
+    progressBar.textContent = `${answered}/${questions.length} (${Math.round(progress)}%)`;
+}
+
+// حفظ التقدم في LocalStorage
+function saveProgress() {
+    const answers = {};
+    questions.forEach((_, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        if (selected) answers[index] = selected.value;
+    });
+    localStorage.setItem('quizProgress', JSON.stringify(answers));
+}
+
+// تحميل التقدم من LocalStorage
+function loadProgress() {
+    const saved = JSON.parse(localStorage.getItem('quizProgress'));
+    if (saved) {
+        Object.keys(saved).forEach(index => {
+            const input = document.querySelector(`input[name="q${index}"][value="${saved[index]}"]`);
+            if (input) {
+                input.checked = true;
+                checkAnswerImmediately(index);
+            }
+        });
+        updateProgress();
+    }
+}
+
+// تقديم الاختبار
+function submitQuiz() {
+    clearInterval(timerInterval);
+    
+    let score = 0;
+    let answersHTML = "";
+    let correctCount = 0;
+    
+    // تحليل حسب الفئة
+    const categoryStats = {};
+    questions.forEach(q => {
+        if (!categoryStats[q.category]) {
+            categoryStats[q.category] = { total: 0, correct: 0 };
+        }
+    });
+    
+    const t = translations[currentLanguage];
+    
+    questions.forEach((item, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        const value = selected ? selected.value : "No Answer";
+        const isCorrect = value === item.a;
+        
+        if (isCorrect) {
+            score++;
+            correctCount++;
+            categoryStats[item.category].correct++;
+        }
+        
+        categoryStats[item.category].total++;
+        
+        answersHTML += `
+            <div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">
+                <strong>${index + 1}. ${item.q}</strong><br>
+                <span class="correct-answer">✅ ${t.correct}: ${item.a}</span><br>
+                <span class="user-answer">📝 ${t.yourAnswer}: ${value}</span>
+                <br><small>${t.category}: ${item.category} | ${t.level}: ${item.level}</small>
+            </div>
+        `;
+    });
+    
+    // إضافة الرسم البياني
+    const chartHTML = `
+        <div class="chart-container">
+            <h3>${t.overallPerformance}</h3>
+            <div class="chart">
+                <div class="chart-bar correct-bar" style="width: ${(correctCount/questions.length)*100}%">
+                    ${correctCount} ${currentLanguage === 'en' ? 'Correct' : 'صحيح'} (${Math.round((correctCount/questions.length)*100)}%)
+                </div>
+                <div class="chart-bar incorrect-bar" style="width: ${((questions.length-correctCount)/questions.length)*100}%">
+                    ${questions.length-correctCount} ${currentLanguage === 'en' ? 'Incorrect' : 'خطأ'} (${Math.round(((questions.length-correctCount)/questions.length)*100)}%)
+                </div>
+            </div>
+            
+            <h3>${t.performanceByCategory}</h3>
+            ${Object.entries(categoryStats).map(([category, stats]) => {
+                const percentage = Math.round((stats.correct/stats.total)*100);
+                return `
+                    <div>
+                        <strong>${category}:</strong> ${stats.correct}/${stats.total} (${percentage}%)
+                        <div class="chart" style="height: 20px; margin: 5px 0;">
+                            <div class="chart-bar correct-bar" style="width: ${percentage}%"></div>
+                            <div class="chart-bar incorrect-bar" style="width: ${100-percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+    
+    // تحديد المستوى بناءً على النتيجة
+    let level = "";
+    let levelColor = "";
+    const percentage = (score/questions.length)*100;
+    
+    if (percentage >= 90) {
+        level = currentLanguage === 'en' ? "Excellent! 🎉" : "ممتاز! 🎉";
+        levelColor = "#4CAF50";
+    } else if (percentage >= 70) {
+        level = currentLanguage === 'en' ? "Good Job! 👍" : "عمل جيد! 👍";
+        levelColor = "#2196F3";
+    } else if (percentage >= 50) {
+        level = currentLanguage === 'en' ? "Keep Practicing! 📚" : "استمر في الممارسة! 📚";
+        levelColor = "#FF9800";
+    } else {
+        level = currentLanguage === 'en' ? "Needs Improvement! 💪" : "يحتاج إلى تحسين! 💪";
+        levelColor = "#f44336";
+    }
+    
+    const scoreText = currentLanguage === 'en' ? 
+        `Your Score: <span class="score-number">${score}</span> / ${questions.length}` :
+        `نتيجتك: <span class="score-number">${score}</span> / ${questions.length}`;
+    
+    document.getElementById("scoreText").innerHTML = `
+        <div>${scoreText}</div>
+        <div class="percentage">${percentage.toFixed(1)}%</div>
+        <div style="color: ${levelColor}; font-size: 24px; margin-top: 10px;">${level}</div>
+    `;
+    
+    document.getElementById("chartContainer").innerHTML = chartHTML;
+    document.getElementById("answersList").innerHTML = answersHTML;
+    document.getElementById("resultPage").style.display = "block";
+    window.scrollTo(0, 0);
+    
+    // حذف التقدم المحفوظ بعد الانتهاء
+    localStorage.removeItem('quizProgress');
+}
+
+// إعادة تعيين الاختبار
+function resetQuiz() {
+    // إيقاف المؤقت
+    clearInterval(timerInterval);
+    
+    // إعادة تعيين المؤقت
+    timer = 1800;
+    
+    // تحديث عرض المؤقت بناءً على اللغة الحالية
+    const timeLabel = currentLanguage === 'en' ? 
+        "Time Remaining: 30:00" : "الوقت المتبقي: 30:00";
+    document.getElementById('timer').textContent = timeLabel;
+    
+    // إعادة تعيين الأسئلة
+    document.querySelectorAll('input[type="radio"]').forEach(input => {
+        input.checked = false;
+    });
+    
+    // إعادة تعيين التنسيق
+    document.querySelectorAll('.question').forEach(q => {
+        q.classList.remove('correct', 'incorrect', 'selected-answer');
+    });
+    
+    // إخفاء النتائج
+    document.getElementById("resultPage").style.display = "none";
+    
+    // إعادة تعيين شريط التقدم
+    updateProgress();
+    
+    // بدء مؤقت جديد
+    startTimer();
+    
+    // حذف التقدم المحفوظ
+    localStorage.removeItem('quizProgress');
+}
+
+// طباعة النتائج
+function printResults() {
+    const resultPage = document.getElementById("resultPage").cloneNode(true);
+    const originalPage = document.getElementById("resultPage");
+    
+    // إخفاء الأزرار عند الطباعة
+    resultPage.querySelectorAll('button').forEach(btn => btn.style.display = 'none');
+    
+    // فتح نافذة الطباعة
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Test Results</title>');
+    printWindow.document.write('<style>body{font-family:Arial;padding:20px;}');
+    printWindow.document.write('.result-item{margin:10px 0;padding:10px;border-left:5px solid;}');
+    printWindow.document.write('.correct{border-color:green;} .incorrect{border-color:red;}');
+    printWindow.document.write('</style></head><body>');
+    printWindow.document.write('<h1>' + (currentLanguage === 'en' ? 'English Grammar Test Results' : 'نتائج اختبار قواعد اللغة الإنجليزية') + '</h1>');
+    printWindow.document.write(resultPage.innerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+}
+</script>
+
+</body>
+</html>
